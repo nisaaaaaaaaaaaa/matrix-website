@@ -3,26 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bienvenue dans la Matrix</title>
+    <title>Bienvenue dans la Matrice</title>
     <style>
+        /* Style global */
         body {
             margin: 0;
             padding: 0;
-            background-color: black;
-            color: #00ff00;
             font-family: 'Courier New', Courier, monospace;
-            overflow: hidden;
+            background-color: #000; /* Fond noir */
+            color: #0f0; /* Texte vert néon */
+            overflow: hidden; /* Désactiver le scroll */
         }
 
-        .matrix {
+        h1 {
             position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+            text-shadow: 0 0 10px #0f0, 0 0 20px #0f0, 0 0 30px #0f0;
+            z-index: 10;
+            white-space: nowrap;
+        }
+
+        p {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.5rem;
+            text-shadow: 0 0 10px #0f0, 0 0 20px #0f0;
+            z-index: 10;
+            white-space: nowrap;
+        }
+
+        /* Effet Matrix */
+        canvas {
+            position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url('your-image-path.jpg'); /* Ajoutez l'image de style Matrix ici */
-            background-size: cover;
-            animation: rain 5s infinite linear;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="matrix"></canvas>
+    <h1>Bienvenue dans la Matrice</h1>
+    <p>Préparez-vous pour une aventure unique.</p>
+
+    <script>
+        // Canvas pour l'effet Matrix
+        const canvas = document.getElementById('matrix');
+        const ctx = canvas.getContext('2d');
+
+        // Taille du canvas
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // Caractères Matrix
+        const matrixChars = "0123456789abcdefghijklmnopqrstuvwxyz";
+        const fontSize = 16;
+        const columns = canvas.width / fontSize;
+
+        // Position des gouttes (une par colonne)
+        const drops = Array(Math.floor(columns)).fill(0);
+
+        // Fonction de rendu
+        function drawMatrix() {
+            ctx.fillStyle = "rgba(0, 0, 0, 0.05)"; // Traînée noire transparente
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = "#0f0"; // Texte vert néon
+            ctx.font = `${fontSize}px monospace`;
+
+            drops.forEach((y, x) => {
+                const text = matrixChars.charAt(Math.floor(Math.random() * matrixChars.length));
+                ctx.fillText(text, x * fontSize, y * fontSize);
+
+                if (y * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[x] = 0; // Réinitialisation de la goutte
+                }
+                drops[x]++;
+            });
         }
 
-         docment
+        // Mise à jour du canvas toutes les 50ms
+        setInterval(drawMatrix, 50);
+
+        // Ajuster la taille du canvas si la fenêtre est redimensionnée
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html>
